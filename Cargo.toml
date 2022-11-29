@@ -1,0 +1,10 @@
+[package]
+name = "redis-checker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+getopts = "0.2"
+futures = "0.3"
+redis = { version = "0.22.1", features = ["tokio-comp"] }
+tokio = { version = "1", features = ["full"] }
