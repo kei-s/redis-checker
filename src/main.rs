@@ -72,9 +72,22 @@ async fn check_and_log(redis_url: &str, log_path: &str, key: String) -> RedisRes
     let type_name: String = redis::cmd("TYPE").arg(&key).query_async(&mut con).await?;
     let result: Vec<String> = match &*type_name {
         "string" => vec![con.get(&key).await?],
-        "set" => con.smembers(&key).await?,
+        "set" => {
+            let mut result: Vec<String> = con.smembers(&key).await?;
+            result.sort();
+            result
+        }
         "list" => con.lrange(&key, 0, -1).await?,
-        "hash" => con.hgetall(&key).await?,
+        "hash" => {
+            let result: Vec<String> = con.hgetall(&key).await?;
+            let mut tuples: Vec<(&String, &String)> =
+                result.chunks(2).map(|c| (&c[0], &c[1])).collect();
+            tuples.sort_by(|a, b| a.0.cmp(b.0));
+            tuples
+                .iter()
+                .flat_map(|t| vec![t.0.to_string(), t.1.to_string()])
+                .collect()
+        }
         "zset" => con.zrange(&key, 0, -1).await?,
         "none" => vec!["".to_string()],
         unknown => panic!("Not supported type '{unknown}' for key: {key}"),
