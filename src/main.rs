@@ -35,7 +35,7 @@ async fn main() {
         .await
         .unwrap();
 
-    println!("Start...");
+    println!("Start... version: {:}", env!("CARGO_PKG_VERSION"));
 
     let keys = get_keys(&redis_url).await.unwrap();
     check_values(&redis_url, &log_path, keys, concurency)
