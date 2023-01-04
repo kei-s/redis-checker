@@ -22,6 +22,12 @@ ruby:processes set: f12aade4ebe04f04
 
 ## Options
 
-- `-h`, `--host HOST`: Redis host: redis://127.0.0.1/
-- `-o`, `--output OUTPUT`: Output log file
-- `-c`, `--concurrency NUM`: concurrent number: default 50
+```
+Options:
+    -h, --host HOST     Redis host: redis://127.0.0.1/
+    -o, --output OUTPUT Output log file
+        --redis_connection NUM
+                        redis connection number 30
+        --c_redis NUM   concurrent number for redis: default 200
+        --c_file NUM    concurrent number for file: default 200
+```
